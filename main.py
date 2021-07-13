@@ -6,10 +6,10 @@ import pyttsx3
 import datetime
 
 
-# настройки
+#options
 opts = {
     "name": ('alpha','alph'),
-    "aux_words": ('tell','what','when',"how", "let's", "what's",'is','the'),
+    "aux_words": ('tell','what','when',"how", "let's", "what's",'is','the','say'),
     "cmds": {
         "time": ('now time','time','time now'),
     "stop" : (
@@ -17,15 +17,13 @@ opts = {
     }
 }
  
-# функции
+#functions
 def speak(what):
     print( what )
     speak_engine.say( what )
     speak_engine.runAndWait()
     speak_engine.stop()
 
-def help():
-    speak("Can I help you")
     
 def callback(recognizer, audio):
     try:
@@ -48,7 +46,9 @@ def callback(recognizer, audio):
         speak("Voice not recognized")
     except sr.RequestError as e:
         speak("Unknown error")
- 
+
+#comand recognize
+#comparison of teams and and selection of the most situable 
 def recognize_cmd(cmd):
     RC = {'cmd': '', 'percent': 0}
     for c,v in opts['cmds'].items():
@@ -60,7 +60,8 @@ def recognize_cmd(cmd):
                 RC['percent'] = vrt
     
     return RC
- 
+
+#processing the received command 
 def execute_cmd(cmd):
     if cmd == 'time':
         now = datetime.datetime.now()
@@ -70,6 +71,7 @@ def execute_cmd(cmd):
         stop_talking()
     else:
         speak("Unknown comand")
+
 
     
 def stop_talking():
@@ -83,12 +85,17 @@ with m as source:
     r.adjust_for_ambient_noise(source)
  
 speak_engine = pyttsx3.init()
- 
+
+
+#choice of voice 
 voices = speak_engine.getProperty('voices')
 speak_engine.setProperty('voice', voices[2].id)
- 
+
+
+#greeting from our bot
 speak("Hi, my name is Alpha")
-help()
+speak("Can I help you")
+
 stop_listening = r.listen_in_background(m, callback)
-while True: time.sleep(0.1)
+while True: time.sleep(0.1) #infinity loop
 
